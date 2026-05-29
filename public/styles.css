@@ -1,0 +1,614 @@
+:root {
+  color-scheme: light;
+  --bg: #f4f6fb;
+  --text: #111827;
+  --muted: #667085;
+  --subtle: #98a2b3;
+  --line: color-mix(in srgb, #101828 12%, transparent);
+  --glass-bg: color-mix(in srgb, white 68%, transparent);
+  --glass-strong: color-mix(in srgb, white 82%, transparent);
+  --glass-border: color-mix(in srgb, white 66%, #98a2b3 20%);
+  --glass-highlight: color-mix(in srgb, white 76%, transparent);
+  --shadow: 0 24px 70px color-mix(in srgb, #344054 18%, transparent);
+  --shadow-soft: 0 12px 34px color-mix(in srgb, #344054 10%, transparent);
+  --blur: 24px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --blue: #0a84ff;
+  --green: #30d158;
+  --indigo: #5856d6;
+  --orange: #ff9f0a;
+  --red: #ff3b30;
+  --teal: #32ade6;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  min-height: 100%;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--teal) 14%, transparent), transparent 28%),
+    linear-gradient(225deg, color-mix(in srgb, var(--orange) 12%, transparent), transparent 24%),
+    linear-gradient(315deg, color-mix(in srgb, var(--indigo) 11%, transparent), transparent 31%),
+    var(--bg);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--text);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus {
+  outline: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 20px clamp(14px, 2.4vw, 36px) 32px;
+}
+
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 var(--glass-highlight), var(--shadow-soft);
+  backdrop-filter: blur(var(--blur)) saturate(1.32);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(1.32);
+}
+
+.top-bar {
+  position: sticky;
+  top: 12px;
+  z-index: 5;
+  display: grid;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: var(--radius-lg);
+}
+
+.top-line,
+.nav-line {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.top-line {
+  justify-content: space-between;
+}
+
+.nav-line {
+  min-height: 46px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.brand-logo {
+  display: block;
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.channel-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--blue) 94%, white 6%);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 38%, transparent), 0 14px 28px color-mix(in srgb, var(--blue) 22%, transparent);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.channel-button:hover {
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 44%, transparent), 0 18px 34px color-mix(in srgb, var(--blue) 28%, transparent);
+}
+
+.channel-button:focus-visible,
+.crumb:focus-visible,
+.icon-button:focus-visible,
+.file-row:focus-visible,
+.primary-button:focus-visible,
+.ghost-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--blue) 17%, transparent), inset 0 1px 0 var(--glass-highlight);
+}
+
+.channel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--green) 18%, transparent);
+}
+
+.content {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  margin: 14px 0 0;
+}
+
+.file-panel {
+  border-radius: var(--radius-lg);
+}
+
+.path-panel {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.path-label {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: auto;
+  scrollbar-width: none;
+}
+
+.breadcrumbs::-webkit-scrollbar {
+  display: none;
+}
+
+.crumb {
+  flex: 0 0 auto;
+  display: inline-block;
+  max-width: 220px;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  color: var(--blue);
+  min-height: 32px;
+  padding: 0 4px;
+  cursor: pointer;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.crumb-static {
+  color: var(--muted);
+  cursor: default;
+}
+
+.crumb-separator {
+  color: var(--subtle);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, white 62%, transparent);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease;
+}
+
+.icon-button:disabled {
+  cursor: default;
+  opacity: 0.42;
+}
+
+.icon-button:not(:disabled):hover {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, white 82%, transparent);
+  border-color: color-mix(in srgb, var(--blue) 30%, var(--line));
+}
+
+.icon-button:focus-visible {
+  border-color: color-mix(in srgb, var(--blue) 44%, var(--line));
+}
+
+.file-action::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+}
+
+.toolbar-icon {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+.file-panel {
+  min-height: 460px;
+  padding: 18px;
+  box-shadow: inset 0 1px 0 var(--glass-highlight), var(--shadow);
+}
+
+.site-footer {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 16px 18px;
+  border-radius: var(--radius-lg);
+  color: var(--muted);
+}
+
+.site-footer .copyright {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.site-footer p {
+  max-width: 1120px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.75;
+}
+
+.panel-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 2px 4px 16px;
+}
+
+.panel-head h1 {
+  margin: 0;
+  font-size: clamp(22px, 3vw, 34px);
+  line-height: 1.12;
+  letter-spacing: 0;
+}
+
+.panel-head p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.file-list {
+  display: grid;
+  gap: 8px;
+}
+
+.file-row {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 68px;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--line) 54%, transparent);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, white 52%, transparent);
+  cursor: pointer;
+  text-align: left;
+  transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.file-row:hover {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, white 78%, transparent);
+  border-color: color-mix(in srgb, var(--blue) 24%, var(--line));
+  box-shadow: 0 14px 30px color-mix(in srgb, #344054 10%, transparent);
+}
+
+.file-row:focus-visible {
+  border-color: color-mix(in srgb, var(--blue) 42%, var(--line));
+}
+
+.item-icon {
+  display: block;
+  width: 38px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.item-main {
+  min-width: 0;
+}
+
+.item-name {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.file-action {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  color: var(--muted);
+}
+
+.file-action::before {
+  width: 24px;
+  height: 24px;
+  background: var(--action-icon) center / contain no-repeat;
+}
+
+.empty-state {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 12px;
+  min-height: 260px;
+  color: var(--muted);
+}
+
+.empty-icon {
+  display: block;
+  width: 76px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.unlock-dialog {
+  width: min(360px, calc(100vw - 32px));
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-lg);
+  color: var(--text);
+}
+
+.unlock-dialog::backdrop {
+  background: color-mix(in srgb, #e9edf5 78%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.unlock-card {
+  display: grid;
+  gap: 14px;
+  padding: 30px;
+  text-align: center;
+}
+
+.unlock-icon {
+  display: block;
+  width: 58px;
+  height: 52px;
+  margin: 0 auto 2px;
+  object-fit: contain;
+}
+
+.unlock-card h2 {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: 0;
+}
+
+.unlock-card p {
+  margin: -4px 0 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.unlock-card input {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid color-mix(in srgb, var(--line) 74%, transparent);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, white 74%, transparent);
+  color: var(--text);
+  outline: none;
+  padding: 0 14px;
+  text-align: center;
+}
+
+.unlock-card input:focus-visible {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--blue) 16%, transparent);
+}
+
+.primary-button,
+.ghost-button {
+  min-height: 46px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.primary-button {
+  background: var(--blue);
+  color: white;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 38%, transparent), 0 14px 28px color-mix(in srgb, var(--blue) 20%, transparent);
+}
+
+.ghost-button {
+  background: color-mix(in srgb, white 48%, transparent);
+  color: var(--muted);
+}
+
+.form-error {
+  min-height: 18px;
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    padding: 12px 10px 24px;
+  }
+
+  .top-bar {
+    top: 8px;
+    border-radius: var(--radius-md);
+  }
+
+  .top-line,
+  .nav-line {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .nav-line {
+    gap: 10px;
+  }
+
+  .path-panel {
+    width: 100%;
+  }
+
+  .breadcrumbs {
+    max-width: 100%;
+  }
+
+  .crumb {
+    max-width: 116px;
+  }
+
+  .crumb:last-child {
+    max-width: 150px;
+  }
+
+  .brand {
+    font-size: 19px;
+  }
+
+  .channel-button {
+    min-height: 38px;
+    padding: 0 13px;
+    font-size: 12px;
+  }
+
+  .file-panel {
+    padding: 12px;
+  }
+
+  .file-row {
+    grid-template-columns: 40px minmax(0, 1fr) 22px;
+    min-height: 64px;
+    padding: 9px;
+  }
+
+  .item-name {
+    font-size: 15px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #111318;
+    --text: #f5f7fb;
+    --muted: #aab2c0;
+    --subtle: #747c8a;
+    --line: color-mix(in srgb, white 16%, transparent);
+    --glass-bg: color-mix(in srgb, #1b2029 68%, transparent);
+    --glass-strong: color-mix(in srgb, #202632 78%, transparent);
+    --glass-border: color-mix(in srgb, white 16%, transparent);
+    --glass-highlight: color-mix(in srgb, white 18%, transparent);
+    --shadow: 0 24px 70px color-mix(in srgb, black 42%, transparent);
+    --shadow-soft: 0 12px 34px color-mix(in srgb, black 32%, transparent);
+  }
+
+  html {
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--teal) 13%, transparent), transparent 28%),
+      linear-gradient(225deg, color-mix(in srgb, var(--orange) 10%, transparent), transparent 24%),
+      linear-gradient(315deg, color-mix(in srgb, var(--indigo) 14%, transparent), transparent 31%),
+      var(--bg);
+  }
+
+  .file-row,
+  .icon-button,
+  .unlock-card input,
+  .ghost-button {
+    background: color-mix(in srgb, #252b36 56%, transparent);
+  }
+
+  .file-row:hover {
+    background: color-mix(in srgb, #2c3442 76%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

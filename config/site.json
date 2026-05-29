@@ -1,0 +1,11 @@
+{
+  "title": "iBoat网盘",
+  "channelLabel": "关注TG频道",
+  "channelUrl": "https://t.me/boatzhou666",
+  "unlockMaxAgeSeconds": 1800,
+  "protected": {
+    "动漫": {
+      "password": "123456"
+    }
+  }
+}

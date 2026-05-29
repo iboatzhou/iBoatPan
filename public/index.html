@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>iBoat网盘</title>
+    <link rel="icon" href="/icons/brand/favicon.ico" sizes="any" />
+    <link rel="stylesheet" href="/styles.css?v=5" />
+    <script src="/app.js?v=5" type="module"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="top-bar glass">
+        <div class="top-line">
+          <a class="brand" href="/" data-home>
+            <img class="brand-logo" src="/icons/brand/logo.svg" alt="" aria-hidden="true" />
+            <span data-title>iBoat网盘</span>
+          </a>
+          <a class="channel-button" data-channel hidden target="_blank" rel="noreferrer">
+            <span class="channel-dot" aria-hidden="true"></span>
+            <span data-channel-label>关注频道</span>
+          </a>
+        </div>
+
+        <div class="nav-line">
+          <section class="path-panel" aria-label="当前位置">
+            <div class="path-label">当前位置</div>
+            <nav class="breadcrumbs" data-breadcrumbs></nav>
+          </section>
+
+          <section class="toolbar">
+            <button class="icon-button" type="button" data-back aria-label="返回上一级" title="返回上一级">
+              <img class="toolbar-icon" src="/icons/nav/back.svg?v=2" alt="" aria-hidden="true" />
+            </button>
+            <button class="icon-button" type="button" data-refresh aria-label="刷新当前目录" title="刷新当前目录">
+              <img class="toolbar-icon" src="/icons/nav/refresh.svg?v=2" alt="" aria-hidden="true" />
+            </button>
+          </section>
+        </div>
+      </header>
+
+      <main class="content">
+        <section class="file-panel glass" aria-live="polite">
+          <div class="panel-head">
+            <div>
+              <h1 data-heading>全部文件</h1>
+              <p data-subheading>0 个项目</p>
+            </div>
+          </div>
+          <div class="file-list" data-list></div>
+          <div class="empty-state" data-empty hidden>
+            <img class="empty-icon" src="/icons/content/empty-folder.svg?v=2" alt="" aria-hidden="true" />
+            <strong>这里还没有文件</strong>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer glass">
+        <div class="copyright">© <span data-year></span> BOATZHOU · iBoat网盘</div>
+        <p>
+          免责声明：本站所发布的一切破解补丁、注册机和注册信息及软件的文章仅限用于学习和研究目的；不得将上述内容用于商业或者非法用途，否则，一切后果请用户自负。本站信息来自网络，版权争议与本站无关，您必须在下载后的24个小时之内，从您的电脑中彻底删除上述内容。访问和下载本站内容，说明您已同意上述条款。
+        </p>
+      </footer>
+    </div>
+
+    <dialog class="unlock-dialog glass" data-dialog>
+      <form method="dialog" class="unlock-card" data-unlock-form>
+        <img class="unlock-icon" src="/icons/content/folder-lock.svg?v=2" alt="" aria-hidden="true" />
+        <h2>这是一个加密文件夹</h2>
+        <p>请输入访问密码解密</p>
+        <label>
+          <span class="sr-only">文件夹密码</span>
+          <input data-password type="password" autocomplete="current-password" placeholder="请输入文件夹密码" />
+        </label>
+        <button class="primary-button" type="submit">确认解密</button>
+        <button class="ghost-button" type="button" data-cancel>返回上一级</button>
+        <div class="form-error" data-error role="alert"></div>
+      </form>
+    </dialog>
+  </body>
+</html>
