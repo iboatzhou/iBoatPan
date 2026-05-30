@@ -665,18 +665,25 @@ a {
     border-radius: var(--radius-md);
   }
 
-  .top-line,
-  .nav-line {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .nav-line {
+  .top-line {
     gap: 10px;
   }
 
+  .nav-line {
+    align-items: flex-start;
+    gap: 8px;
+  }
+
   .path-panel {
+    align-items: center;
+    gap: 9px;
+    flex: 1 1 auto;
     width: 100%;
+    min-width: 0;
+  }
+
+  .path-label {
+    font-size: 12px;
   }
 
   .breadcrumbs {
@@ -692,13 +699,32 @@ a {
   }
 
   .brand {
+    gap: 9px;
+    min-width: 0;
     font-size: 19px;
   }
 
+  .brand-logo {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+  }
+
+  .brand span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .channel-button {
-    min-height: 38px;
-    padding: 0 13px;
+    min-height: 34px;
+    padding: 0 11px;
     font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .toolbar {
+    gap: 8px;
   }
 
   .file-panel {
