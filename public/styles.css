@@ -360,10 +360,14 @@ a {
 }
 
 .item-main {
+  display: block;
   min-width: 0;
+  overflow: hidden;
 }
 
 .item-name {
+  display: block;
+  max-width: 100%;
   overflow: hidden;
   color: var(--text);
   font-size: 16px;
@@ -383,6 +387,8 @@ a {
 
 .file-action {
   position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
   width: 30px;
   height: 30px;
   color: var(--muted);
@@ -732,13 +738,31 @@ a {
   }
 
   .file-row {
-    grid-template-columns: 40px minmax(0, 1fr) 22px;
+    grid-template-columns: 40px minmax(0, 1fr) 28px;
     min-height: 64px;
     padding: 9px;
   }
 
   .item-name {
     font-size: 15px;
+  }
+
+  .item-meta {
+    gap: 6px;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .item-meta span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .file-action {
+    width: 28px;
+    height: 28px;
   }
 
   .preview-dialog {
