@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>iBoat网盘</title>
     <link rel="icon" href="/icons/brand/favicon.ico" sizes="any" />
-    <link rel="stylesheet" href="/styles.css?v=9" />
+    <link rel="stylesheet" href="/styles.css?v=10" />
     <script src="https://at.alicdn.com/t/c/font_5187706_p0cabicnl8p.js"></script>
     <script src="/app.js?v=8" type="module"></script>
   </head>
@@ -28,15 +28,6 @@
             <div class="path-label">当前位置</div>
             <nav class="breadcrumbs" data-breadcrumbs></nav>
           </section>
-
-          <section class="toolbar">
-            <button class="icon-button" type="button" data-back aria-label="返回上一级" title="返回上一级">
-              <svg class="toolbar-icon symbol-icon" aria-hidden="true" focusable="false"><use href="#iboat-chevron-left"></use></svg>
-            </button>
-            <button class="icon-button" type="button" data-refresh aria-label="刷新当前目录" title="刷新当前目录">
-              <svg class="toolbar-icon symbol-icon" aria-hidden="true" focusable="false"><use href="#iboat-refresh"></use></svg>
-            </button>
-          </section>
         </div>
       </header>
 
@@ -47,6 +38,14 @@
               <h1 data-heading>全部文件</h1>
               <p data-subheading>0 个项目</p>
             </div>
+            <section class="toolbar panel-toolbar">
+              <button class="icon-button" type="button" data-back aria-label="返回上一级" title="返回上一级">
+                <svg class="toolbar-icon symbol-icon" aria-hidden="true" focusable="false"><use href="#iboat-chevron-left"></use></svg>
+              </button>
+              <button class="icon-button" type="button" data-refresh aria-label="刷新当前目录" title="刷新当前目录">
+                <svg class="toolbar-icon symbol-icon" aria-hidden="true" focusable="false"><use href="#iboat-refresh"></use></svg>
+              </button>
+            </section>
           </div>
           <div class="file-list" data-list></div>
           <div class="empty-state" data-empty hidden>
