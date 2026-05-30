@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>iBoat网盘</title>
     <link rel="icon" href="/icons/brand/favicon.ico" sizes="any" />
-    <link rel="stylesheet" href="/styles.css?v=8" />
-    <script src="/app.js?v=7" type="module"></script>
+    <link rel="stylesheet" href="/styles.css?v=9" />
+    <script src="https://at.alicdn.com/t/c/font_5187706_p0cabicnl8p.js"></script>
+    <script src="/app.js?v=8" type="module"></script>
   </head>
   <body>
     <div class="app-shell">
@@ -30,10 +31,10 @@
 
           <section class="toolbar">
             <button class="icon-button" type="button" data-back aria-label="返回上一级" title="返回上一级">
-              <img class="toolbar-icon" src="/icons/nav/back.svg?v=2" alt="" aria-hidden="true" />
+              <svg class="toolbar-icon symbol-icon" aria-hidden="true" focusable="false"><use href="#iboat-chevron-left"></use></svg>
             </button>
             <button class="icon-button" type="button" data-refresh aria-label="刷新当前目录" title="刷新当前目录">
-              <img class="toolbar-icon" src="/icons/nav/refresh.svg?v=2" alt="" aria-hidden="true" />
+              <svg class="toolbar-icon symbol-icon" aria-hidden="true" focusable="false"><use href="#iboat-refresh"></use></svg>
             </button>
           </section>
         </div>
@@ -49,7 +50,7 @@
           </div>
           <div class="file-list" data-list></div>
           <div class="empty-state" data-empty hidden>
-            <img class="empty-icon" src="/icons/content/empty-folder.svg?v=2" alt="" aria-hidden="true" />
+            <svg class="empty-icon symbol-icon" aria-hidden="true" focusable="false"><use href="#iboat-folder"></use></svg>
             <strong>这里还没有文件</strong>
           </div>
         </section>
@@ -65,7 +66,7 @@
 
     <dialog class="unlock-dialog glass" data-dialog>
       <form method="dialog" class="unlock-card" data-unlock-form>
-        <img class="unlock-icon" src="/icons/content/folder-lock.svg?v=2" alt="" aria-hidden="true" />
+        <svg class="unlock-icon symbol-icon" aria-hidden="true" focusable="false"><use href="#iboat-folder-locked"></use></svg>
         <h2>这是一个加密文件夹</h2>
         <p>请输入访问密码解密</p>
         <label>
@@ -82,7 +83,7 @@
       <section class="preview-card" aria-label="文件预览">
         <header class="preview-head">
           <div class="preview-file">
-            <img class="preview-file-icon" data-preview-icon src="/icons/files/file.svg?v=4" alt="" aria-hidden="true" />
+            <svg class="preview-file-icon symbol-icon" data-preview-icon aria-hidden="true" focusable="false"><use href="#iboat-file"></use></svg>
             <div>
               <h2 data-preview-title>文件预览</h2>
               <p data-preview-meta></p>
@@ -90,7 +91,7 @@
           </div>
           <div class="preview-actions">
             <a class="icon-button preview-download" data-preview-download href="#" aria-label="下载文件" title="下载文件">
-              <img class="toolbar-icon" src="/icons/nav/download.svg?v=1" alt="" aria-hidden="true" />
+              <svg class="toolbar-icon symbol-icon" aria-hidden="true" focusable="false"><use href="#iboat-download"></use></svg>
             </a>
             <button class="icon-button preview-close" type="button" data-preview-close aria-label="关闭预览" title="关闭预览">×</button>
           </div>

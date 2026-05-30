@@ -151,24 +151,54 @@ function rerenderCurrentBreadcrumbs() {
   renderBreadcrumbs(state.path);
 }
 
+const SVG_NS = "http://www.w3.org/2000/svg";
+const XLINK_NS = "http://www.w3.org/1999/xlink";
+
 const fileIconGroups = [
-  { icon: "file-archive.svg", extensions: ["zip", "rar", "7z", "tar", "gz", "bz2", "xz"] },
-  { icon: "file-image.svg", extensions: ["jpg", "jpeg", "png", "gif", "webp", "avif", "bmp", "ico", "svg"] },
-  { icon: "file-video.svg", extensions: ["mp4", "mkv", "mov", "avi", "wmv", "flv", "webm", "m4v", "ts"] },
-  { icon: "file-audio.svg", extensions: ["mp3", "flac", "wav", "aac", "ogg", "m4a", "ape"] },
-  { icon: "file-pdf.svg", extensions: ["pdf"] },
-  { icon: "file-doc.svg", extensions: ["doc", "docx", "txt", "md", "rtf", "epub"] },
-  { icon: "file-sheet.svg", extensions: ["xls", "xlsx", "csv", "tsv"] },
-  { icon: "file-code.svg", extensions: ["js", "mjs", "ts", "tsx", "jsx", "html", "css", "json", "xml", "yml", "yaml", "php", "py", "java", "go", "rs", "c", "cpp", "h", "sh", "ps1", "sql"] },
-  { icon: "file-apk.svg", extensions: ["apk", "apks", "xapk"] },
-  { icon: "file-windows.svg", extensions: ["exe", "msi", "msix", "bat", "cmd", "reg"] },
-  { icon: "file-apple.svg", extensions: ["dmg", "pkg", "ipa", "app"] }
+  { icon: "zip", extensions: ["zip", "rar", "7z", "tar", "gz", "bz2", "xz"] },
+  { icon: "img", extensions: ["jpg", "jpeg", "png", "gif", "webp", "avif", "bmp", "ico", "svg"] },
+  { icon: "video", extensions: ["mp4", "mkv", "mov", "avi", "wmv", "flv", "webm", "m4v", "ts"] },
+  { icon: "audio", extensions: ["mp3", "flac", "wav", "aac", "ogg", "m4a", "ape"] },
+  { icon: "pdf", extensions: ["pdf"] },
+  { icon: "txt", extensions: ["txt", "md", "rtf", "epub", "log", "ini", "conf"] },
+  { icon: "word", extensions: ["doc", "docx"] },
+  { icon: "ppt", extensions: ["ppt", "pptx", "pps", "ppsx"] },
+  { icon: "excel", extensions: ["xls", "xlsx", "csv", "tsv"] },
+  { icon: "code", extensions: ["js", "mjs", "ts", "tsx", "jsx", "html", "css", "json", "xml", "yml", "yaml", "php", "py", "java", "go", "rs", "c", "cpp", "h", "sh", "ps1", "sql"] },
+  { icon: "android", extensions: ["apk", "apks", "xapk"] },
+  { icon: "win11", extensions: ["exe", "msi", "msix", "bat", "cmd", "reg"] },
+  { icon: "apple", extensions: ["dmg", "pkg", "ipa", "app"] }
 ];
+
+function iconId(name) {
+  return `#iboat-${name}`;
+}
+
+function createSymbolIcon(name, className) {
+  const svg = document.createElementNS(SVG_NS, "svg");
+  svg.classList.add(className, "symbol-icon");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+
+  const use = document.createElementNS(SVG_NS, "use");
+  use.setAttribute("href", iconId(name));
+  use.setAttributeNS(XLINK_NS, "href", iconId(name));
+  svg.append(use);
+  return svg;
+}
+
+function setSymbolIcon(svg, name) {
+  const href = iconId(name);
+  const use = svg.querySelector("use");
+  if (!use) return;
+  use.setAttribute("href", href);
+  use.setAttributeNS(XLINK_NS, "href", href);
+}
 
 function iconForFile(name) {
   const extension = name.includes(".") ? name.split(".").pop().toLowerCase() : "";
   const match = fileIconGroups.find((group) => group.extensions.includes(extension));
-  return `/icons/files/${match?.icon || "file.svg"}?v=4`;
+  return match?.icon || "file";
 }
 
 function fileExtension(name) {
@@ -212,7 +242,7 @@ async function openPreview(item) {
 
   els.previewTitle.textContent = item.name;
   els.previewMeta.textContent = `${formatSize(item.size)} · ${formatDate(item.modifiedAt)}`;
-  els.previewIcon.src = iconForFile(item.name);
+  setSymbolIcon(els.previewIcon, iconForFile(item.name));
   els.previewDownload.href = downloadUrl(item.path);
   els.previewDownload.download = item.name;
   els.previewBody.innerHTML = "";
@@ -289,16 +319,10 @@ function renderItems(items) {
       }
     });
 
-    const icon = document.createElement("img");
-    icon.className = "item-icon";
-    icon.alt = "";
-    icon.setAttribute("aria-hidden", "true");
-    icon.src =
-      item.type === "folder"
-        ? item.locked
-          ? "/icons/content/folder-lock.svg?v=2"
-          : "/icons/content/folder.svg?v=2"
-        : iconForFile(item.name);
+    const icon = createSymbolIcon(
+      item.type === "folder" ? (item.locked ? "folder-locked" : "folder") : iconForFile(item.name),
+      "item-icon"
+    );
 
     const main = document.createElement("span");
     main.className = "item-main";
@@ -317,7 +341,7 @@ function renderItems(items) {
     const action = document.createElement("span");
     action.className = "file-action";
     action.setAttribute("aria-hidden", "true");
-    action.style.setProperty("--action-icon", `url("${item.type === "folder" ? "/icons/nav/chevron-right.svg?v=1" : "/icons/nav/download.svg?v=1"}")`);
+    action.append(createSymbolIcon(item.type === "folder" ? "chevron-right" : "download", "file-action-icon"));
 
     main.append(name, meta);
     row.append(icon, main, action);

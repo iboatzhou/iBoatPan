@@ -623,27 +623,18 @@ public/styles.css
 
 ## 14. 文件类型图标如何手动修改
 
-文件类型图标目录：
+当前文件类型图标使用 iconfont Symbol，不再使用 `public/icons/files/` 下的独立 SVG 文件。
+
+Symbol 脚本在：
 
 ```text
-public/icons/files/
+public/index.html
 ```
 
-当前包括：
+搜索：
 
-```text
-file.svg
-file-apk.svg
-file-apple.svg
-file-archive.svg
-file-audio.svg
-file-code.svg
-file-doc.svg
-file-image.svg
-file-pdf.svg
-file-sheet.svg
-file-video.svg
-file-windows.svg
+```html
+font_5187706_p0cabicnl8p.js
 ```
 
 映射逻辑在：
@@ -661,32 +652,34 @@ fileIconGroups
 例如添加 `.iso` 使用压缩包图标：
 
 ```js
-{ icon: "file-archive.svg", extensions: ["zip", "rar", "7z", "iso"] }
+{ icon: "zip", extensions: ["zip", "rar", "7z", "iso"] }
 ```
 
-如果某个扩展名没有命中，会使用：
+这里的 `icon` 会拼成 Symbol ID，例如 `zip` 会引用：
 
 ```text
-public/icons/files/file.svg
+#iboat-zip
+```
+
+如果某个扩展名没有命中，会使用默认图标：
+
+```text
+#iboat-file
 ```
 
 ## 15. 文件夹和导航图标如何手动修改
 
-文件夹图标：
+文件夹和导航图标也使用 iconfont Symbol，不再使用独立 SVG 文件。
+
+常用 Symbol ID：
 
 ```text
-public/icons/content/folder.svg
-public/icons/content/folder-lock.svg
-public/icons/content/empty-folder.svg
-```
-
-导航图标：
-
-```text
-public/icons/nav/back.svg
-public/icons/nav/refresh.svg
-public/icons/nav/chevron-right.svg
-public/icons/nav/download.svg
+#iboat-folder
+#iboat-folder-locked
+#iboat-chevron-left
+#iboat-chevron-right
+#iboat-refresh
+#iboat-download
 ```
 
 引用位置：
