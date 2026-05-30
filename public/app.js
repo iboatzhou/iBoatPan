@@ -1,7 +1,8 @@
 const state = {
   path: readPathFromLocation(),
   pendingLockedPath: "",
-  protectedDir: ""
+  protectedDir: "",
+  previewRequestId: 0
 };
 
 const els = {
@@ -20,7 +21,14 @@ const els = {
   unlockForm: document.querySelector("[data-unlock-form]"),
   password: document.querySelector("[data-password]"),
   error: document.querySelector("[data-error]"),
-  cancel: document.querySelector("[data-cancel]")
+  cancel: document.querySelector("[data-cancel]"),
+  previewDialog: document.querySelector("[data-preview-dialog]"),
+  previewTitle: document.querySelector("[data-preview-title]"),
+  previewMeta: document.querySelector("[data-preview-meta]"),
+  previewIcon: document.querySelector("[data-preview-icon]"),
+  previewBody: document.querySelector("[data-preview-body]"),
+  previewDownload: document.querySelector("[data-preview-download]"),
+  previewClose: document.querySelector("[data-preview-close]")
 };
 
 document.querySelector("[data-year]").textContent = new Date().getFullYear();
@@ -163,6 +171,108 @@ function iconForFile(name) {
   return `/icons/files/${match?.icon || "file.svg"}?v=4`;
 }
 
+function fileExtension(name) {
+  return name.includes(".") ? name.split(".").pop().toLowerCase() : "";
+}
+
+function downloadUrl(clientPath) {
+  return `/download?path=${encodeURIComponent(clientPath)}`;
+}
+
+function previewUrl(clientPath) {
+  return `/preview?path=${encodeURIComponent(clientPath)}`;
+}
+
+function previewKind(name) {
+  const extension = fileExtension(name);
+  if (["jpg", "jpeg", "png", "gif", "webp", "avif", "bmp", "ico", "svg"].includes(extension)) return "image";
+  if (["txt", "md", "json", "js", "mjs", "ts", "tsx", "jsx", "css", "html", "htm", "xml", "yml", "yaml", "log", "ini", "conf", "sql", "sh", "ps1"].includes(extension)) return "text";
+  if (extension === "pdf") return "pdf";
+  if (["mp3", "wav", "ogg", "m4a"].includes(extension)) return "audio";
+  if (["mp4", "webm", "mov"].includes(extension)) return "video";
+  return "unsupported";
+}
+
+function setPreviewMessage(message) {
+  const empty = document.createElement("div");
+  empty.className = "preview-message";
+  empty.textContent = message;
+  els.previewBody.replaceChildren(empty);
+}
+
+async function openPreview(item) {
+  const requestId = ++state.previewRequestId;
+  const url = previewUrl(item.path);
+  const kind = previewKind(item.name);
+
+  if (kind === "unsupported") {
+    location.href = downloadUrl(item.path);
+    return;
+  }
+
+  els.previewTitle.textContent = item.name;
+  els.previewMeta.textContent = `${formatSize(item.size)} · ${formatDate(item.modifiedAt)}`;
+  els.previewIcon.src = iconForFile(item.name);
+  els.previewDownload.href = downloadUrl(item.path);
+  els.previewDownload.download = item.name;
+  els.previewBody.innerHTML = "";
+  els.previewDialog.showModal();
+
+  if (kind === "image") {
+    const image = document.createElement("img");
+    image.className = "preview-image";
+    image.src = url;
+    image.alt = item.name;
+    els.previewBody.replaceChildren(image);
+    return;
+  }
+
+  if (kind === "pdf") {
+    const frame = document.createElement("iframe");
+    frame.className = "preview-frame";
+    frame.src = url;
+    frame.title = item.name;
+    els.previewBody.replaceChildren(frame);
+    return;
+  }
+
+  if (kind === "audio") {
+    const audio = document.createElement("audio");
+    audio.className = "preview-media";
+    audio.src = url;
+    audio.controls = true;
+    audio.preload = "metadata";
+    els.previewBody.replaceChildren(audio);
+    return;
+  }
+
+  if (kind === "video") {
+    const video = document.createElement("video");
+    video.className = "preview-video";
+    video.src = url;
+    video.controls = true;
+    video.preload = "metadata";
+    els.previewBody.replaceChildren(video);
+    return;
+  }
+
+  setPreviewMessage("正在加载预览...");
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Preview failed");
+    const content = await response.text();
+    if (requestId !== state.previewRequestId) return;
+    const pre = document.createElement("pre");
+    pre.className = "preview-text";
+    pre.textContent = content;
+    els.previewBody.replaceChildren(pre);
+  } catch {
+    if (requestId === state.previewRequestId) {
+      setPreviewMessage("预览加载失败，可以直接下载。");
+    }
+  }
+}
+
 function renderItems(items) {
   els.list.innerHTML = "";
   els.empty.hidden = items.length !== 0;
@@ -175,7 +285,7 @@ function renderItems(items) {
       if (item.type === "folder") {
         setPath(item.path);
       } else {
-        location.href = `/download?path=${encodeURIComponent(item.path)}`;
+        openPreview(item);
       }
     });
 
@@ -269,6 +379,17 @@ els.refresh.addEventListener("click", () => loadDirectory());
 els.cancel.addEventListener("click", () => {
   els.dialog.close();
   setPath(state.pendingLockedPath.split("/").slice(0, -1).join("/"));
+});
+
+els.previewClose.addEventListener("click", () => {
+  state.previewRequestId += 1;
+  els.previewDialog.close();
+  els.previewBody.innerHTML = "";
+});
+
+els.previewDialog.addEventListener("close", () => {
+  state.previewRequestId += 1;
+  els.previewBody.innerHTML = "";
 });
 
 els.unlockForm.addEventListener("submit", async (event) => {

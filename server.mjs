@@ -25,9 +25,49 @@ const MIME_TYPES = new Map([
   [".jpg", "image/jpeg"],
   [".jpeg", "image/jpeg"],
   [".webp", "image/webp"],
+  [".gif", "image/gif"],
+  [".avif", "image/avif"],
+  [".bmp", "image/bmp"],
+  [".ico", "image/x-icon"],
+  [".pdf", "application/pdf"],
+  [".mp3", "audio/mpeg"],
+  [".wav", "audio/wav"],
+  [".ogg", "audio/ogg"],
+  [".m4a", "audio/mp4"],
+  [".mp4", "video/mp4"],
+  [".webm", "video/webm"],
+  [".mov", "video/quicktime"],
+  [".md", "text/markdown; charset=utf-8"],
+  [".log", "text/plain; charset=utf-8"],
+  [".xml", "application/xml; charset=utf-8"],
+  [".yml", "text/yaml; charset=utf-8"],
+  [".yaml", "text/yaml; charset=utf-8"],
   [".apk", "application/vnd.android.package-archive"],
   [".zip", "application/zip"],
   [".txt", "text/plain; charset=utf-8"]
+]);
+
+const TEXT_PREVIEW_EXTENSIONS = new Set([
+  ".txt",
+  ".md",
+  ".json",
+  ".js",
+  ".mjs",
+  ".ts",
+  ".tsx",
+  ".jsx",
+  ".css",
+  ".html",
+  ".htm",
+  ".xml",
+  ".yml",
+  ".yaml",
+  ".log",
+  ".ini",
+  ".conf",
+  ".sql",
+  ".sh",
+  ".ps1"
 ]);
 
 const defaultConfig = {
@@ -271,18 +311,7 @@ async function forgetDirectory(req, res, config) {
 }
 
 async function downloadFile(req, res, url, config) {
-  const requestedPath = url.searchParams.get("path") || "";
-  const { normalized, absolute } = resolveStoragePath(requestedPath);
-  const realFilePath = await fs.realpath(absolute);
-  assertInsideStorageRealPath(realFilePath);
-  const protectedDir = isProtectedPath(normalized, config.protected);
-
-  if (protectedDir && !verifyToken(parseCookies(req)[`pan_unlock_${encodeURIComponent(protectedDir)}`], protectedDir)) {
-    return text(res, 403, "This file is protected.");
-  }
-
-  const stats = await fs.stat(realFilePath);
-  if (!stats.isFile()) return text(res, 400, "Not a file.");
+  const { normalized, realFilePath, stats } = await resolveReadableFile(req, url, config);
 
   const filename = path.basename(realFilePath);
   const headers = {
@@ -298,6 +327,97 @@ async function downloadFile(req, res, url, config) {
       "x-accel-buffering": "yes"
     });
     return res.end();
+  }
+
+  res.writeHead(200, {
+    ...headers,
+    "content-length": stats.size
+  });
+  createReadStream(realFilePath).pipe(res);
+}
+
+async function resolveReadableFile(req, url, config) {
+  const requestedPath = url.searchParams.get("path") || "";
+  const { normalized, absolute } = resolveStoragePath(requestedPath);
+  const realFilePath = await fs.realpath(absolute);
+  assertInsideStorageRealPath(realFilePath);
+  const protectedDir = isProtectedPath(normalized, config.protected);
+
+  if (protectedDir && !verifyToken(parseCookies(req)[`pan_unlock_${encodeURIComponent(protectedDir)}`], protectedDir)) {
+    throw Object.assign(new Error("This file is protected."), { statusCode: 403 });
+  }
+
+  const stats = await fs.stat(realFilePath);
+  if (!stats.isFile()) {
+    throw Object.assign(new Error("Not a file."), { statusCode: 400 });
+  }
+
+  return { normalized, realFilePath, stats };
+}
+
+function parseRangeHeader(rangeHeader, size) {
+  const match = /^bytes=(\d*)-(\d*)$/.exec(rangeHeader || "");
+  if (!match) return null;
+
+  let start = match[1] === "" ? null : Number(match[1]);
+  let end = match[2] === "" ? null : Number(match[2]);
+
+  if (start === null && end === null) return null;
+  if (start === null) {
+    start = Math.max(size - end, 0);
+    end = size - 1;
+  } else if (end === null) {
+    end = size - 1;
+  }
+
+  if (!Number.isInteger(start) || !Number.isInteger(end) || start < 0 || end < start || start >= size) {
+    return null;
+  }
+
+  return { start, end: Math.min(end, size - 1) };
+}
+
+async function previewFile(req, res, url, config) {
+  const { normalized, realFilePath, stats } = await resolveReadableFile(req, url, config);
+
+  const filename = path.basename(realFilePath);
+  const extension = path.extname(filename).toLowerCase();
+  const contentType = TEXT_PREVIEW_EXTENSIONS.has(extension)
+    ? "text/plain; charset=utf-8"
+    : MIME_TYPES.get(extension) || "application/octet-stream";
+  const headers = {
+    "content-type": contentType,
+    "content-disposition": `inline; filename*=UTF-8''${encodeURIComponent(filename)}`,
+    "last-modified": stats.mtime.toUTCString(),
+    "accept-ranges": "bytes",
+    "x-content-type-options": "nosniff"
+  };
+
+  if (USE_X_ACCEL) {
+    res.writeHead(200, {
+      ...headers,
+      "x-accel-redirect": buildAccelPath(normalized),
+      "x-accel-buffering": "yes"
+    });
+    return res.end();
+  }
+
+  const range = parseRangeHeader(req.headers.range, stats.size);
+  if (req.headers.range && !range) {
+    res.writeHead(416, {
+      "content-range": `bytes */${stats.size}`,
+      "accept-ranges": "bytes"
+    });
+    return res.end();
+  }
+
+  if (range) {
+    res.writeHead(206, {
+      ...headers,
+      "content-length": range.end - range.start + 1,
+      "content-range": `bytes ${range.start}-${range.end}/${stats.size}`
+    });
+    return createReadStream(realFilePath, range).pipe(res);
   }
 
   res.writeHead(200, {
@@ -354,6 +474,7 @@ http
       if (req.method === "POST" && url.pathname === "/api/unlock") return await unlockDirectory(req, res, config);
       if (req.method === "POST" && url.pathname === "/api/forget") return await forgetDirectory(req, res, config);
       if (req.method === "GET" && url.pathname === "/download") return await downloadFile(req, res, url, config);
+      if (req.method === "GET" && url.pathname === "/preview") return await previewFile(req, res, url, config);
       if (req.method === "GET" || req.method === "HEAD") {
         if (url.pathname === "/" || url.pathname.startsWith("/icons/") || ["/app.js", "/styles.css"].includes(url.pathname)) {
           return await serveStatic(res, url.pathname);

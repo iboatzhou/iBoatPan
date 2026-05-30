@@ -495,6 +495,154 @@ a {
   font-weight: 700;
 }
 
+.preview-dialog {
+  width: min(1040px, calc(100vw - 28px));
+  max-height: min(820px, calc(100vh - 28px));
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-lg);
+  color: var(--text);
+  overflow: hidden;
+}
+
+.preview-dialog::backdrop {
+  background: color-mix(in srgb, #e9edf5 72%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.preview-card {
+  display: grid;
+  grid-template-rows: auto minmax(260px, 1fr);
+  max-height: min(820px, calc(100vh - 28px));
+}
+
+.preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+  padding: 14px;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 62%, transparent);
+  background: color-mix(in srgb, var(--glass-strong) 78%, transparent);
+}
+
+.preview-file {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.preview-file-icon {
+  display: block;
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.preview-file h2 {
+  overflow: hidden;
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-file p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.preview-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.preview-download {
+  background: color-mix(in srgb, var(--blue) 10%, white 58%);
+}
+
+.preview-close {
+  color: var(--muted);
+  font-size: 25px;
+  line-height: 1;
+}
+
+.preview-body {
+  display: grid;
+  min-height: 0;
+  padding: 14px;
+  overflow: auto;
+  background: color-mix(in srgb, white 36%, transparent);
+}
+
+.preview-image {
+  display: block;
+  align-self: center;
+  justify-self: center;
+  max-width: 100%;
+  max-height: calc(100vh - 178px);
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  box-shadow: 0 16px 36px color-mix(in srgb, #344054 12%, transparent);
+}
+
+.preview-frame {
+  width: 100%;
+  min-height: calc(100vh - 178px);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: white;
+}
+
+.preview-media,
+.preview-video {
+  align-self: center;
+  justify-self: center;
+  width: 100%;
+}
+
+.preview-media {
+  max-width: 620px;
+}
+
+.preview-video {
+  max-height: calc(100vh - 178px);
+  border-radius: var(--radius-md);
+  background: black;
+}
+
+.preview-text {
+  min-width: 100%;
+  margin: 0;
+  padding: 16px;
+  overflow: auto;
+  border: 1px solid color-mix(in srgb, var(--line) 52%, transparent);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, white 66%, transparent);
+  color: var(--text);
+  font: 13px/1.68 ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.preview-message {
+  align-self: center;
+  justify-self: center;
+  max-width: 360px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -566,6 +714,41 @@ a {
   .item-name {
     font-size: 15px;
   }
+
+  .preview-dialog {
+    width: calc(100vw - 20px);
+    max-height: calc(100vh - 20px);
+  }
+
+  .preview-card {
+    max-height: calc(100vh - 20px);
+  }
+
+  .preview-head {
+    align-items: flex-start;
+    padding: 12px;
+  }
+
+  .preview-file {
+    grid-template-columns: 34px minmax(0, 1fr);
+  }
+
+  .preview-file-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .preview-file h2 {
+    font-size: 15px;
+  }
+
+  .preview-actions {
+    gap: 8px;
+  }
+
+  .preview-body {
+    padding: 10px;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -595,12 +778,21 @@ a {
   .file-row,
   .icon-button,
   .unlock-card input,
-  .ghost-button {
+  .ghost-button,
+  .preview-text {
     background: color-mix(in srgb, #252b36 56%, transparent);
   }
 
   .file-row:hover {
     background: color-mix(in srgb, #2c3442 76%, transparent);
+  }
+
+  .preview-body {
+    background: color-mix(in srgb, #141922 42%, transparent);
+  }
+
+  .preview-download {
+    background: color-mix(in srgb, var(--blue) 18%, #252b36 58%);
   }
 }
 

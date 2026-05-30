@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>iBoat网盘</title>
     <link rel="icon" href="/icons/brand/favicon.ico" sizes="any" />
-    <link rel="stylesheet" href="/styles.css?v=5" />
-    <script src="/app.js?v=5" type="module"></script>
+    <link rel="stylesheet" href="/styles.css?v=6" />
+    <script src="/app.js?v=7" type="module"></script>
   </head>
   <body>
     <div class="app-shell">
@@ -76,6 +76,27 @@
         <button class="ghost-button" type="button" data-cancel>返回上一级</button>
         <div class="form-error" data-error role="alert"></div>
       </form>
+    </dialog>
+
+    <dialog class="preview-dialog glass" data-preview-dialog>
+      <section class="preview-card" aria-label="文件预览">
+        <header class="preview-head">
+          <div class="preview-file">
+            <img class="preview-file-icon" data-preview-icon src="/icons/files/file.svg?v=4" alt="" aria-hidden="true" />
+            <div>
+              <h2 data-preview-title>文件预览</h2>
+              <p data-preview-meta></p>
+            </div>
+          </div>
+          <div class="preview-actions">
+            <a class="icon-button preview-download" data-preview-download href="#" aria-label="下载文件" title="下载文件">
+              <img class="toolbar-icon" src="/icons/nav/download.svg?v=1" alt="" aria-hidden="true" />
+            </a>
+            <button class="icon-button preview-close" type="button" data-preview-close aria-label="关闭预览" title="关闭预览">×</button>
+          </div>
+        </header>
+        <div class="preview-body" data-preview-body></div>
+      </section>
     </dialog>
   </body>
 </html>
