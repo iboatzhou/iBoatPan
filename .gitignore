@@ -1,2 +1,3 @@
-# Ignore the storage directory and all its contents
-storage/
+# Ignore all contents under storage, but keep the directory via a placeholder file
+storage/**
+!storage/.gitkeep
